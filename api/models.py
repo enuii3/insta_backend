@@ -8,17 +8,16 @@ def upload_avatar_path(instance, filename):
 
 def upload_post_path(instance, filename):
     ext = filename.split('.')[-1]
-    return '/'.join(['posts', str(instance.userPost.id)+str(instance.title)+str(".")+str(ext)]
+    return '/'.join(['posts', str(instance.userPost.id)+str(instance.title)+str(".")+str(ext)])
 
 class UserManager(BaseUserManager):
-    def create_user(self, email: password=None):
+    def create_user(self, email, password=None):
         if not email:
             raise ValueError('email is must')
 
         user = self.model(email=self.normalize_email(email))
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_superuser(self, email, password):
@@ -43,12 +42,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     nickName = models.CharField(max_length=20)
-    userProfile = model.OneToOneField(
+    userProfile = models.OneToOneField(
         settings.AUTH_USER_MODEL, related_name='userProfile',
         on_delete=models.CASCADE
     )
     created_on = models.DateTimeField(auto_now_add=True)
-    img = models.ImageField(blank=True, null=True, upload_to=uplad_avatar_path)
+    img = models.ImageField(blank=True, null=True, upload_to=upload_avatar_path)
 
     def __str__(self):
         return self.nickName
@@ -67,7 +66,7 @@ class Post(models.Model):
         return self.title
 
 class Comment(models.Model):
-    text = models.CharField(max_lengt=100)
+    text = models.CharField(max_length=100)
     userComment = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='userComment',
         on_delete=models.CASCADE
