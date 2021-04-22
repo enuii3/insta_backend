@@ -20,6 +20,7 @@ class MyProfileListView(generics.ListAPIView):
     serializer_class = serializers.ProfileSerializer
 
     def get_queryset(self):
+        print(self.queryset.filter(userProfile=self.request.user))
         return self.queryset.filter(userProfile=self.request.user)
 
 class PostViewSet(viewsets.ModelViewSet):
